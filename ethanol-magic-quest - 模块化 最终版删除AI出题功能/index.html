@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>奇幻元素：乙醇微观探秘</title>
+    
+    <link rel="stylesheet" href="css/style.css">
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/DragControls.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <header id="global-header" class="magic-top-bar">
+        <div class="header-left">
+            <h1 class="game-logo">🧪 炼金工坊：乙醇的奥秘</h1>
+            <div id="level-indicator-container"></div>
+        </div>
+        
+        <nav id="module-nav-bar" class="magic-nav-bar">
+            <button class="nav-btn" onclick="app.uiManager.switchModule(1)">🧩 结构探秘</button>
+            <button class="nav-btn" onclick="app.uiManager.switchModule(2)">💥 钠置换反应</button>
+            <button class="nav-btn" onclick="app.uiManager.switchModule(3)">🔥 铜催化氧化</button>
+            <button class="nav-btn" onclick="app.uiManager.switchModule(4)">📜 综合评测</button>
+        </nav>
+    </header>
+
+    <div id="integrated-layout">
+        
+        <div id="left-vision-panel" class="hidden">
+            <header class="panel-header">
+                <h3 id="mini-vision-title" class="vision-title">3D 水晶投影</h3>
+            </header>
+            <div id="main-3d-content-wrapper">
+                <div id="main-3d-preview" class="mini-model-container">
+                    <p class="loading-text">⏳ 正在凝聚魔力构建投影...</p>
+                </div>
+            </div>
+            <div id="mini-vision-controls" class="hidden compact-controls-bar">
+                <button id="btn-replay-animation" class="magic-btn compact-btn" title="回放微观演变">🔁 回放</button>
+                <button id="btn-highlight-group" class="magic-btn compact-btn" title="标记官能团">🎯 官能团</button>
+            </div>
+        </div>
+
+        <div id="right-action-stage">
+            <div id="canvas-container"></div>
+
+            <div id="ui-layer">
+                <aside id="system-menu" class="system-menu"></aside>
+
+                <div id="action-bar" class="action-bar">
+                    <div class="skill-group element-skills">
+                        <span class="skill-label">基础召唤</span>
+                        <button id="btn-add-c" class="magic-btn rune-btn btn-c" title="召唤 碳">C</button>
+                        <button id="btn-add-h" class="magic-btn rune-btn btn-h" title="召唤 氢">H</button>
+                        <button id="btn-add-o" class="magic-btn rune-btn btn-o" title="召唤 氧">O</button>
+                    </div>
+                    
+                    <div class="skill-divider"></div>
+                    
+			<div class="skill-group reaction-skills">
+    				<span class="skill-label">高阶法术</span>
+    				<button id="btn-reaction-na" class="magic-btn spell-btn hidden" title="投入金属钠">💥 Na</button>
+    				<button id="btn-reaction-cu" class="magic-btn spell-btn hidden" title="召唤灼热铜丝">🔥 Cu</button>
+    				<button id="btn-finish" class="magic-btn spell-btn hidden" title="结业试炼">🏆</button>
+			</div>                
+		</div>
+
+                <div id="isomer-panel" class="magic-scroll hidden">
+                    <h2 id="isomer-title" class="scroll-title">发现新物质！</h2>
+                    <div id="isomer-desc" class="scroll-content"></div>
+                </div>
+
+                <div id="ai-trial-panel" class="magic-scroll hidden">
+                    <h2 class="scroll-title">📜 远古智慧试炼</h2>
+                    <div id="ai-content" class="ai-text-large">
+                        <p>正在呼唤远古智慧 (AI 加载中)...</p>
+                    </div>
+                    <button id="btn-close-ai" class="magic-btn close-btn hidden">✖</button>
+                </div>
+
+                <div id="evaluation-panel" class="magic-scroll hidden">
+                    <button id="btn-close-eval" class="magic-btn close-btn">✖</button>
+                    <h2 class="scroll-title">✨ 大炼金术师能力鉴定</h2>
+                    <div class="radar-wrapper" style="background: rgba(0,0,0,0.3); border-radius: 15px; padding: 20px;">
+                        <canvas id="radarChart"></canvas>
+                    </div>
+                    <p id="eval-feedback" class="encouraging-text" style="font-size: 1.5em; text-align: center; color: #fff; margin-top: 20px; text-shadow: 1px 1px 3px #000;"></p>
+                    <div style="text-align: center; margin-top: 30px;">
+                        <button id="btn-download-eval" class="magic-btn" style="font-size: 1.5em; padding: 12px 30px; border-color: var(--rpg-mana); color: var(--rpg-mana); box-shadow: 0 0 20px rgba(0,255,204,0.4);">📥 下载专属鉴定证书</button>
+                    </div>
+                </div>        
+            </div>
+        </div>
+    </div>
+
+    <script src="js/PhysicsEngine.js"></script>
+    <script src="js/InteractionManager.js"></script>
+    <script src="js/SceneManager.js"></script>
+    <script src="js/TopologyParser.js"></script>
+    <script src="js/ReactionDirector.js"></script>
+    <script src="js/ChemistryEngine.js"></script>
+    <script src="js/MiniModelRenderer.js"></script>
+    <script src="js/UIManager.js"></script>
+    <script src="js/AIAssistant.js"></script>
+    <script src="js/main.js"></script>
+</body>
+</html>

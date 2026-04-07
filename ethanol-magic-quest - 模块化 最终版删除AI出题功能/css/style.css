@@ -1,0 +1,245 @@
+:root {
+    --rpg-gold: #ffd700;
+    --rpg-gold-dim: #b8860b;
+    --rpg-dark: #1a1a2e;
+    --rpg-parchment: #f4e4bc;
+    --rpg-border: #8b5a2b;
+    --rpg-glow: 0 0 15px rgba(255, 215, 0, 0.6);
+    --rpg-mana: #00ffcc;
+    --rpg-danger: #ff4444;
+}
+
+/* ================= 全局基础与弹性布局 ================= */
+body, html {
+    margin: 0; padding: 0; overflow: hidden;
+    font-family: 'Courier New', 'Microsoft YaHei', sans-serif;
+    background-color: #050505; height: 100vh;
+    /* 将整个页面改为纵向弹性布局，以便分离顶部导航和下方3D空间 */
+    display: flex; 
+    flex-direction: column;
+}
+
+/* ================= 🌟 独立的顶部中控台 ================= */
+.magic-top-bar {
+    height: 65px;
+    background: rgba(26, 26, 46, 0.95); 
+    border-bottom: 2px solid var(--rpg-border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 30px;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.8);
+    z-index: 1000;
+}
+
+.header-left { 
+    display: flex; 
+    align-items: center; 
+    gap: 20px; 
+}
+
+.game-logo { 
+    color: var(--rpg-gold); 
+    font-size: 1.6em; 
+    margin: 0; 
+    text-shadow: var(--rpg-glow); 
+    letter-spacing: 2px;
+}
+
+/* 关卡指示器：适应顶部横向排列 */
+.level-indicator { 
+    background: transparent; 
+    border: 1px dashed var(--rpg-gold-dim); 
+    border-radius: 6px; 
+    padding: 5px 15px; 
+    color: var(--rpg-mana); 
+    font-size: 1em; 
+    font-weight: bold; 
+}
+
+/* 导航栏样式 */
+.magic-nav-bar { 
+    display: flex; 
+    gap: 15px; 
+}
+
+.nav-btn {
+    background: transparent;
+    border: 1px solid transparent;
+    color: var(--rpg-parchment);
+    font-size: 1.1em;
+    font-weight: bold;
+    padding: 8px 16px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    text-shadow: 1px 1px 2px #000;
+    font-family: inherit;
+}
+
+.nav-btn:hover {
+    border-color: var(--rpg-gold);
+    color: var(--rpg-gold);
+    background: rgba(255, 215, 0, 0.1);
+    box-shadow: inset 0 0 10px rgba(255, 215, 0, 0.2);
+    transform: translateY(-2px);
+}
+
+/* ================= 主布局空间扣减 ================= */
+#integrated-layout {
+    /* 扣除顶部高度后，占满剩余垂直空间 */
+    flex: 1; 
+    width: 100vw; 
+    display: flex; 
+    overflow: hidden;
+}
+
+/* 左侧：3D 水晶投影面板 */
+#left-vision-panel {
+    width: 33%; height: 100%; border-right: 3px solid var(--rpg-border);
+    background: rgba(10, 10, 15, 0.95);
+    display: flex; flex-direction: column;
+    box-shadow: 10px 0 30px rgba(0,0,0,0.5);
+    transition: width 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0.5s;
+    overflow: hidden; z-index: 10;
+}
+
+#left-vision-panel.hidden {
+    width: 0; opacity: 0; border-right: none;
+}
+
+/* 右侧：主反应舞台 */
+#right-action-stage {
+    flex: 1; height: 100%; position: relative; overflow: hidden;
+}
+
+/* 主画布容器调整 */
+#canvas-container { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 1; }
+#ui-layer { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 10; pointer-events: none; }
+.hidden { display: none !important; }
+
+/* ================= 左侧面板内容 ================= */
+#left-vision-panel .panel-header {
+    padding: 20px; text-align: center; border-bottom: 2px dashed rgba(139, 90, 43, 0.5);
+}
+.vision-title {
+    color: var(--rpg-gold); text-shadow: var(--rpg-glow); margin: 0; font-size: 1.8em; letter-spacing: 1px;
+}
+
+#main-3d-content-wrapper {
+    flex: 1; padding: 20px; display: flex; flex-direction: column; justify-content: center;
+}
+.mini-model-container {
+    height: 100%; width: 100%; border: 3px solid var(--rpg-border); border-radius: 12px;
+    background: rgba(0,0,0,0.8); overflow: hidden; box-shadow: 0 0 20px rgba(0,0,0,0.8), inset 0 0 15px rgba(0,0,0,0.8);
+    position: relative;
+}
+
+/* Integrated 控制条：紧凑，不占一整行 */
+.compact-controls-bar {
+    padding: 15px; display: flex; justify-content: center; gap: 15px;
+    border-top: 2px dashed rgba(139, 90, 43, 0.5); background: rgba(0,0,0,0.3);
+}
+.compact-btn {
+    font-size: 1.1em; padding: 10px 20px; border-radius: 8px; flex: 0 1 auto;
+    background: rgba(0,0,0,0.7);
+}
+
+/* ================= 右侧 UI 元素定位与纯符号优化 ================= */
+
+/* 系统菜单按钮（右上角）：改为 45px 小圆形纯符号 */
+.system-menu { position: absolute; top: 20px; right: 20px; display: flex; flex-direction: column; gap: 10px; pointer-events: auto; }
+.system-menu .magic-btn { 
+    width: 45px; height: 45px; padding: 0; margin: 0; 
+    border-radius: 50%; font-size: 1.4em; 
+    display: flex; justify-content: center; align-items: center; 
+    background: rgba(0, 0, 0, 0.6); backdrop-filter: blur(4px); 
+}
+
+/* 动作条：缩小内边距使整体变得更为紧凑 */
+.action-bar { 
+    position: absolute; bottom: 30px; left: 50%; transform: translateX(-50%); 
+    background: rgba(30, 20, 10, 0.85); border: 3px solid var(--rpg-border); 
+    border-radius: 15px; padding: 10px 15px; display: flex; align-items: center; 
+    gap: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.8), inset 0 0 15px rgba(139, 90, 43, 0.5); 
+    pointer-events: auto; backdrop-filter: blur(5px); transition: all 0.5s ease; 
+}
+.skill-group { display: flex; align-items: center; gap: 15px; position: relative; }
+.skill-label { 
+    position: absolute; top: -35px; left: 50%; transform: translateX(-50%); 
+    color: var(--rpg-gold-dim); font-size: 0.9em; font-weight: bold; 
+    background: rgba(0,0,0,0.5); padding: 2px 8px; border-radius: 4px; 
+    border: 1px solid #555; white-space: nowrap; 
+}
+.skill-divider { width: 2px; height: 50px; background: linear-gradient(to bottom, transparent, var(--rpg-border), transparent); }
+
+/* 圆形符文按钮 (C, H, O) */
+.rune-btn { width: 60px; height: 60px; border-radius: 50%; font-size: 1.8em; display: flex; justify-content: center; align-items: center; padding: 0; margin: 0; }
+.btn-c { background: radial-gradient(circle, #444, #111); border-color: #888; }
+.btn-h { background: radial-gradient(circle, #eee, #999); color: #222; border-color: #fff; text-shadow: none; }
+.btn-o { background: radial-gradient(circle, #e63946, #780000); border-color: #ff4d4d; }
+
+/* 法术按钮（高阶法术栏）：改为 60px 纯符号圆形，保持和元素召唤按钮一致 */
+.spell-btn { 
+    width: 60px; height: 60px; border-radius: 50%; padding: 0; margin: 0;
+    display: flex; justify-content: center; align-items: center;
+    background: radial-gradient(circle, #2a0845 0%, #6441A5 100%); 
+    border-color: #b088f9; font-size: 1.5em; 
+}
+
+/* 基础按钮样式与交互 */
+.magic-btn { pointer-events: auto; border: 2px solid var(--rpg-gold); color: white; cursor: pointer; transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275); font-family: inherit; font-weight: bold; text-shadow: 1px 1px 2px #000; }
+.magic-btn:hover { transform: scale(1.08); box-shadow: var(--rpg-glow); }
+.magic-btn:active { transform: scale(0.95); }
+
+/* 羊皮纸面板相对于右侧定位 */
+.magic-scroll { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); background: radial-gradient(circle at center, #3a2e24 0%, #1a1510 100%); border: 4px solid var(--rpg-border); border-radius: 12px; padding: 40px; color: var(--rpg-parchment); width: 85%; max-width: 900px; max-height: 80vh; box-shadow: 0 0 50px rgba(0,0,0,0.9), inset 0 0 30px rgba(0,0,0,0.6); overflow-y: auto; pointer-events: auto; z-index: 100; }
+.scroll-title { text-align: center; color: var(--rpg-gold); border-bottom: 2px dashed var(--rpg-border); padding-bottom: 15px; margin-top: 0; font-size: 2.5em; }
+.close-btn { position: absolute; top: 15px; right: 15px; background: rgba(255, 68, 68, 0.2) !important; border-color: var(--rpg-danger) !important; color: var(--rpg-danger) !important; border-radius: 50%; width: 40px; height: 40px; padding: 0; display: flex; justify-content: center; align-items: center; font-size: 1.2em; cursor: pointer; transition: 0.3s; }
+.close-btn:hover { background: rgba(255, 68, 68, 0.5) !important; transform: scale(1.1); }
+
+/* 3倍字号专属类 */
+.ai-text-large { font-size: 300%; line-height: 1.6; font-weight: bold; color: #fff; }
+.ai-text-large .quiz-question { color: var(--rpg-gold); margin-bottom: 30px; text-shadow: 2px 2px 5px #000; }
+.ai-text-large .quiz-option { font-size: 1em; margin: 20px 0; padding: 25px; background: rgba(0, 0, 0, 0.5); border: 2px solid var(--rpg-border); border-radius: 12px; display: block; width: 100%; text-align: left; transition: all 0.3s; cursor: pointer; color: #fff; }
+.ai-text-large .quiz-option:hover { background: rgba(139, 90, 43, 0.4); border-color: var(--rpg-gold); padding-left: 35px; }
+
+/* ================= 分屏模式下的动态布局自适应 (Split Mode) ================= */
+.action-bar.split-mode {
+    left: 20px;               /* 紧贴右侧主反应区的左下角，不遮挡中间画面 */
+    right: auto;
+    transform: none;          /* 取消原来的水平居中对齐 */
+    bottom: 20px;
+    flex-direction: column;   /* 整个技能栏垂直排列 */
+    padding: 20px 15px;
+    border-radius: 15px;
+    align-items: center;
+    background: rgba(30, 20, 10, 0.95);
+    box-shadow: 5px 5px 20px rgba(0,0,0,0.8), inset 0 0 15px rgba(139, 90, 43, 0.5);
+}
+
+.action-bar.split-mode .skill-group {
+    flex-direction: column;   /* 组内元素垂直排列，每个按钮占一横行 */
+    gap: 15px;
+    width: 100%;
+    align-items: center;
+}
+
+.action-bar.split-mode .skill-label {
+    position: static;         /* 取消绝对定位，跟随流式布局 */
+    transform: none;
+    margin-bottom: 5px;
+    font-size: 1.1em;
+    background: transparent;
+    border: none;
+}
+
+.action-bar.split-mode .skill-divider {
+    width: 100%;              /* 分割线由竖线变为横线 */
+    height: 2px;
+    background: linear-gradient(to right, transparent, var(--rpg-border), transparent);
+    margin: 10px 0;
+}
+
+.action-bar.split-mode .rune-btn { width: 55px; height: 55px; font-size: 1.6em; }
+.action-bar.split-mode .spell-btn { width: 55px; height: 55px; font-size: 1.4em; } /* 分屏模式下同样保持圆润饱满的符号按钮 */
